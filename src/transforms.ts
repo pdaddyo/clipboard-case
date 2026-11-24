@@ -2,6 +2,10 @@ export const lowercase = (text: string): string => text.toLowerCase();
 
 export const uppercase = (text: string): string => text.toUpperCase();
 
+export const trimWhitespace = (text: string): string => text.trim();
+
+export const oneLine = (text: string): string => text.trim().replace(/\s+/gu, " ");
+
 // Keep apostrophes inside words, including curly apostrophes and combining marks.
 // This is deliberately simple title case: every word gets a capital, including "the" and "of".
 export function titleCase(text: string): string {

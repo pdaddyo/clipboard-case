@@ -13,6 +13,8 @@ import pasteLowercase from "../src/paste-lowercase";
 import pasteUppercase from "../src/paste-uppercase";
 import pasteSentenceCase from "../src/paste-sentence-case";
 import pasteTitleCase from "../src/paste-title-case";
+import pasteTrimmed from "../src/paste-trimmed";
+import pasteOneLine from "../src/paste-one-line";
 
 beforeEach(() => {
   vi.resetAllMocks();
@@ -46,6 +48,26 @@ describe("clipboard commands", () => {
     await pasteLowercase();
     expect(Clipboard.paste).toHaveBeenCalledWith(" \t\n");
   });
+
+  it.each([
+    ["trimmed", pasteTrimmed, "Hello  WORLD\n\tNext line!"],
+    ["one line", pasteOneLine, "Hello WORLD Next line!"],
+  ] as const)("pastes %s text once", async (_name, command, expected) => {
+    vi.mocked(Clipboard.readText).mockResolvedValue(" \tHello  WORLD\n\tNext line!\r\n ");
+    await command();
+    expect(Clipboard.paste).toHaveBeenCalledExactlyOnceWith(expected);
+    expect(showHUD).not.toHaveBeenCalled();
+  });
+
+  it.each([pasteTrimmed, pasteOneLine])(
+    "does not replace a selection when cleanup removes all text (%#)",
+    async (command) => {
+      vi.mocked(Clipboard.readText).mockResolvedValue(" \t\r\n\u00a0 ");
+      await command();
+      expect(Clipboard.paste).not.toHaveBeenCalled();
+      expect(showHUD).toHaveBeenCalledWith("Nothing to paste after removing whitespace.");
+    },
+  );
 
   it("reports a clipboard-read failure without trying to paste", async () => {
     vi.mocked(Clipboard.readText).mockRejectedValue(new Error("Private clipboard detail"));

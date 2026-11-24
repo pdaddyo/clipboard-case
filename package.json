@@ -2,8 +2,8 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "clipboard-case",
   "title": "Clipboard Case",
-  "version": "1.0.0",
-  "description": "Convert clipboard text to lowercase, uppercase, sentence case, or title case and paste it instantly.",
+  "version": "1.1.0",
+  "description": "Change clipboard text case, trim whitespace, or collapse text to one line and paste it instantly.",
   "icon": "icon.png",
   "author": "paul_barrass",
   "platforms": [
@@ -60,12 +60,37 @@
         "capitalize",
         "clipboard"
       ]
+    },
+    {
+      "name": "paste-trimmed",
+      "title": "Trim Whitespace and Paste",
+      "description": "Remove whitespace from the start and end of clipboard text, then paste it.",
+      "mode": "no-view",
+      "keywords": [
+        "trim",
+        "whitespace",
+        "spaces",
+        "clipboard"
+      ]
+    },
+    {
+      "name": "paste-one-line",
+      "title": "Paste as One Line",
+      "description": "Collapse line breaks, tabs, and repeated spaces to single spaces, then paste it.",
+      "mode": "no-view",
+      "keywords": [
+        "single line",
+        "remove line breaks",
+        "whitespace",
+        "clipboard"
+      ]
     }
   ],
   "scripts": {
     "dev": "ray develop",
     "build": "ray build -e dist",
     "bundle": "ray bundle",
+    "publish": "npx @raycast/api@latest publish",
     "lint": "ray lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

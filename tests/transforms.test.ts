@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { lowercase, sentenceCase, titleCase, uppercase } from "../src/transforms";
+import { lowercase, oneLine, sentenceCase, titleCase, trimWhitespace, uppercase } from "../src/transforms";
 
 describe("case conversions", () => {
   it("lowercases Unicode while retaining layout and punctuation", () => {
@@ -44,5 +44,17 @@ describe("case conversions", () => {
     for (const text of ["", " \t\r\n ", "123 — 😀!?", "你好 世界"]) {
       expect(transform(text)).toBe(text);
     }
+  });
+});
+
+describe("whitespace cleanup", () => {
+  it("trims outer whitespace while preserving interior layout and case", () => {
+    expect(trimWhitespace("\u00a0\t\r\n Hello  WORLD\n\tKeep this! \u2003")).toBe("Hello  WORLD\n\tKeep this!");
+  });
+
+  it("joins lines and collapses whitespace without changing words, case, or punctuation", () => {
+    expect(oneLine(" \tHÉLLO  World!\r\n\r\nDON'T\tSTOP\rNext\u2028line\u2029here\u00a0😀\n")).toBe(
+      "HÉLLO World! DON'T STOP Next line here 😀",
+    );
   });
 });

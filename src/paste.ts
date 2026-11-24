@@ -16,7 +16,14 @@ export async function pasteTransformed(transform: (text: string) => string): Pro
   }
 
   try {
-    await Clipboard.paste(transform(text));
+    const transformed = transform(text);
+
+    if (transformed.length === 0) {
+      await showHUD("Nothing to paste after removing whitespace.");
+      return;
+    }
+
+    await Clipboard.paste(transformed);
   } catch {
     // Avoid logging clipboard contents or including them in an error report.
     await showHUD("Could not paste. Focus a text field and check Raycast’s Accessibility permission.");
